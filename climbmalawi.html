@@ -1,54 +1,97 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<title>Display a map on a webpage</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
-<style>
-body { margin: 0; padding: 0; }
-#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-</style>
+	<meta charset="utf-8">
+	<title>Display a map on a webpage</title>
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+	<link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+	<script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+	</style>
 </head>
+
 <body>
-<div id="map"></div>
-<script>
-	mapboxgl.accessToken = 'pk.eyJ1IjoibWFja2VuaGF1ZXIiLCJhIjoiY2t0d3d4eGNpMm9pcjJwcG5qdWtjb29tciJ9.eucJE0DQdpb_9MZQCPAVWQ';
-const map = new mapboxgl.Map({
-container: 'map', // container ID
-style: 'mapbox://styles/mackenhauer/cl46x99jb001314p98qxg96a0', // style URL
-center: [34.2, -13.5], // starting position [lng, lat]
-zoom: 6 // starting zoom
-});
+	<style>
+		#menu {
+			position: absolute;
+			background: #efefef;
+			padding: 10px;
+			font-family: 'Open Sans', sans-serif;
+		}
+	</style>
 
-map.addControl(new mapboxgl.NavigationControl());
+	<div id="map"></div>
 
-map.on('click', (event) => {
-	// If the user clicked on one of your markers, get its information.
-	const features = map.queryRenderedFeatures(event.point, {
-		layers: ['climbing_spots'] // replace with your layer name
+	<div id="menu">
+		<input id="cl46x99jb001314p98qxg96a0" type="radio" name="rtoggle" value="Outdoor" checked="checked">
+		<label for="outdoors-v11">Outdoor</label>
+		<input id="cl4fslxky000015mswxofy27b" type="radio" name="rtoggle" value="Satellite">
+		<label for="satellite-v9">Satellite</label>
+	</div>
+	<script>
+		mapboxgl.accessToken = 'pk.eyJ1IjoibWFja2VuaGF1ZXIiLCJhIjoiY2t0d3d4eGNpMm9pcjJwcG5qdWtjb29tciJ9.eucJE0DQdpb_9MZQCPAVWQ';
+		const map = new mapboxgl.Map({
+			container: 'map', // container ID
+			style: 'mapbox://styles/mackenhauer/cl46x99jb001314p98qxg96a0', // style URL
+			center: [34.2, -13.5], // starting position [lng, lat]
+			zoom: 6 // starting zoom
+		});
+
+		// Activate base map toggle
+		const layerList = document.getElementById('menu');
+		const inputs = layerList.getElementsByTagName('input');
+
+		for (const input of inputs) {
+			input.onclick = (layer) => {
+				const layerId = layer.target.id;
+				map.setStyle('mapbox://styles/mackenhauer/' + layerId);
+			};
+}
+
+		// Add zoom and rotation controls to the map.
+		map.addControl(new mapboxgl.NavigationControl());
+
+		// Activate click function
+		map.on('click', (event) => {
+			// If the user clicked on one of your markers, get its information.
+			const features = map.queryRenderedFeatures(event.point, {
+				layers: ['climbing_spots'] // replace with your layer name
+			});
+			if (!features.length) {
+				return;
+			}
+			const feature = features[0];
+
+			// Create a popup, specify its options and properties, and add it to the map.
+			const popup = new mapboxgl.Popup({
+					offset: [0, -15]
+				})
+				.setLngLat(feature.geometry.coordinates)
+				.setHTML(
+					`<h3>${feature.properties.name}</h3>`
+				)
+				.addTo(map);
+
 	});
-	if (!features.length) {
-		return;
-	}
-	const feature = features[0];
-// Code from the next step will go here.
-/*
- Create a popup, specify its options
- and properties, and add it to the map.
-*/
- const popup = new mapboxgl.Popup({ offset: [0, -15] })
-	 .setLngLat(feature.geometry.coordinates)
-	 .setHTML(
-		 `<h3>${feature.properties.name}</h3>`
-	 )
-	 .addTo(map);
- });
- // Add zoom and rotation controls to the map.
 
 
-</script>
+
+
+
+	</script>
 
 </body>
+
 </html>
