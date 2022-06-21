@@ -80,25 +80,14 @@
   <div id='map'></div>
   <script>
 
-    var transformRequest = (url, resourceType) => {
-      var isMapboxRequest =
-        url.slice(8, 22) === "api.mapbox.com" ||
-        url.slice(10, 26) === "tiles.mapbox.com";
-      return {
-        url: isMapboxRequest
-          ? url.replace("?", "?pluginName=sheetMapper&")
-          : url
-      };
-    };
     //YOUR TURN: add your Mapbox token
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWFja2VuaGF1ZXIiLCJhIjoiY2w0aWc5eHZ5MGlkaTNqcGFlMG13enA3dyJ9.BQHjEUyBUVBd2QzzZo0OCA'; //Mapbox token
     var map = new mapboxgl.Map({
       container: 'map', // container id
       style: 'mapbox://styles/mapbox/streets-v11', // YOUR TURN: choose a style: https://docs.mapbox.com/api/maps/#styles
-      center: [-122.411, 37.785], // starting position [lng, lat]
-      zoom: 10,// starting zoom
-      transformRequest: transformRequest
+      center: [34.2, -13.5], // starting position [lng, lat]
+      zoom: 8// starting zoom
     });
 
     $(document).ready(function () {
