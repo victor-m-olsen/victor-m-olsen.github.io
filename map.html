@@ -265,11 +265,32 @@
                 orthophotos and vector layers.
             </p>
         </section>
+        <section id="south-sudan">
+            <div>
+                <h3>Cropland Mapping and Food Security Research, South Sudan 2021</h3>
+                <ul>
+                    <li><strong>Role:</strong> Researcher and Remote Sensing Specialist</li>
+                    <li><strong>Project:</strong> Publishing an article in Nature Food titled: "The impact of
+                        conflict-driven cropland abandonment on food insecurity in South Sudan revealed using satellite
+                        remote sensing". The study included development of a novel cropland mapping methodology and
+                        econometric analysis.</li>
+                    <li><strong>Technologies:</strong> Google Earth Engine, Machine Learning, Python, Econometric
+                        Analysis</li>
+                    <li><strong>Key Contributions:</strong> Lead author and researcher.</li>
+                    <li><strong>Resources:</strong> <a href="https://www.nature.com/articles/s43016-021-00417-3"
+                            target="_blank">Nature Food Publication</a> | <a
+                            href="https://github.com/victor-m-olsen/nature-food" target="_blank">GitHub Repository</a>
+                    </li>
+                </ul>
+            </div>
+
+        </section>
         <section id="malawi">
             <h3>Humanitarian Information Management Support, Malawi 2022-2024</h3>
             <p>
                 <strong>Role:</strong> Technical Advisor and Business Developer. <br>
-                <strong>Project:</strong> Initiate and secure funding for multiple information management initiatives in
+                <strong>Project:</strong> Initiating and securing funding for multiple information management
+                initiatives in
                 Malawi, including projects for the UNRCO and the development of a spatial data infrastructure for
                 UNICEF. <br>
                 <strong>Key Contributions:</strong> Identified and addressed information management gaps at UN agencies
@@ -280,7 +301,6 @@
 
 
     <script>
-        // mapboxgl.accessToken = 'pk.eyJ1IjoibWFja2VuaGF1ZXIiLCJhIjoiY2w0aWc5eHZ5MGlkaTNqcGFlMG13enA3dyJ9.BQHjEUyBUVBd2QzzZo0OCA';
         mapboxgl.accessToken = 'pk.eyJ1IjoibWFja2VuaGF1ZXIiLCJhIjoiY2w4c3FvODF5MDAzdTNzbnFydmlmZW5zYyJ9.mIR7xIDbvxVgUizJE_Yr8A';
 
         const map = new mapboxgl.Map({
@@ -364,14 +384,20 @@
             'greenland': {
                 bearing: 15.20,
                 center: [-51.74931, 64.18138],
-                zoom: 12.3,
+                zoom: 8.3,
                 pitch: 65.94
             },
+            'south-sudan': {
+                bearing: -10,
+                center: [29.97632, 5.89207],
+                zoom: 6.6,
+                pitch: 58
+            },
             'malawi': {
-                bearing: -8.80,
-                center: [33.68114, -14.06619],
-                zoom: 9.13,
-                pitch: 67
+                bearing: 0,
+                center: [33.94663, -13.79614],
+                zoom: 6.5,
+                pitch: 0
             },
         };
 
