@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Fly to a location based on scroll position</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <style>
+        #map {
+            position: fixed;
+            width: 50%;
+        }
+
+        #features {
+            width: 50%;
+            margin-left: 50%;
+            font-family: sans-serif;
+            overflow-y: scroll;
+            background-color: #fafafa;
+        }
+
+        section {
+            padding: 100px 50px;
+            line-height: 25px;
+            border-bottom: 1px solid #ddd;
+            opacity: 0.25;
+            font-size: 13px;
+        }
+
+        section.active {
+            opacity: 1;
+        }
+
+        section:last-child {
+            border-bottom: none;
+            margin-bottom: 200px;
+        }
+
+        #features {
+            font-family: Arial, sans-serif;
+            /* Example font */
+            color: #333;
+            /* Text color */
+        }
+
+        #features h3 {
+            font-size: 1.2em;
+            color: #2c3e50;
+            /* Title color */
+            margin-bottom: 10px;
+        }
+
+        #features ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #features li {
+            margin-bottom: 5px;
+        }
+
+        #features li strong {
+            color: #000;
+            /* Emphasis color */
+            font-weight: bold;
+        }
+
+        #features a {
+            color: #1abc9c;
+            /* Link color */
+            text-decoration: none;
+        }
+
+        #features a:hover {
+            text-decoration: underline;
+        }
+
+        #empty-section {
+            padding-top: 100px;
+            /* Smaller space inside the section at the top */
+            padding-bottom: 0px;
+            /* Smaller space inside the section at the bottom */
+        }
+    </style>
+
+    <div id="map"></div>
+    <div id="features">
+        <section id="hsdc" class="active">
+            <div>
+                <h3>Humanitarian Spatial Data Center - Afghanistan 2022-2024</h3>
+                <ul>
+                    <li><strong>Role and Date:</strong> Project Manager and Geospatial Developer</li>
+                    <li><strong>Project:</strong> A comprehensive spatial data management system for disaster risk
+                        reduction in Afghanistan, focusing on automated geospatial analysis of risks such as landslides,
+                        avalanches, floods, earthquakes, and droughts.</li>
+                    <li><strong>Technologies:</strong> GeoNode, PostgreSQL, GeoServer, Python, Web Development, Advanced
+                        Geospatial Analysis</li>
+                    <li><strong>Key Contributions:</strong> Led the software development team and developed all
+                        geospatial analysis and data pipelines, enhancing disaster risk assessment and management for
+                        the humanitarian response.</li>
+                    <li><strong>Resources:</strong> <a href="http://hsdc.immap.org" target="_blank">Project Website</a>
+                        | <a href="https://github.com/iMMAP/geonode_playground" target="_blank">GitHub Repository</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section id="flood">
+            <h3>Flood Forecasting - Afghanistan 2023</h3>
+            <p>
+                <strong>Role:</strong> Geospatial Developer <br>
+                <strong>Project:</strong> An automated riverine flood forecasting system for Afghanistan's major rivers,
+                providing daily updates on flood risk to people and buildings at the basin and district levels. <br>
+                <strong>Technologies:</strong> Python, GLOFAS, PostgreSQL, GeoServer <br>
+                <strong>Key Contributions:</strong> Developed and implemented the methodology, liaised with the
+                Copernicus GLOFAS team for data access and method validation. <br>
+                <strong>Resources:</strong> <a href="https://github.com/victor-m-olsen/iMMAP/tree/main/DRR-Statistics"
+                    target="_blank">GitHub Repository</a>
+            </p>
+        </section>
+        <section id="earthquake">
+            <h3>Earthquake Monitoring - Afghanistan 2023</h3>
+            <p>
+                <strong>Role:</strong> Geospatial Developer <br>
+                <strong>Project:</strong> An automated system for estimating the impact of earthquakes on people and
+                buildings, utilizing the USGS earthquake API and zonal statistics for real-time data and analysis. <br>
+                <strong>Technologies:</strong> Python, USGS, PostgreSQL, GeoServer <br>
+                <strong>Key Contributions:</strong> Led the development and implementation of the methodology and
+                geospatial analysis pipeline. <br>
+            </p>
+        </section>
+        <section id="agriapp">
+            <h3>Environmental Monitoring Application - Syria 2022</h3>
+            <p>
+                <strong>Role:</strong> Project Manager and Remote Sensing Specialist <br>
+                <strong>Project:</strong> A web application for satellite-based monitoring of environmental drivers of
+                food insecurity including crop phenology, drought indicators, water extents, and precipitation in
+                agricultural areas. The application covers all agricultural areas in Syria and provides 10 meter
+                resolution, monthly updates of environmental drivers. <br>
+                <strong>Technologies:</strong> Google Earth Engine, Machine Learning, Time-Series Analysis, Remote
+                Sensing <br>
+                <strong>Key Contributions:</strong> Managed the project and led the implementation of methods and
+                geospatial analysis pipelines, thus providing timely data updates for the food security working group in
+                Syria to make informed decisions for aid provision. <br>
+                <strong>Resources:</strong> <a href="https://syria-land-water-monitoring.org" target="_blank">Project
+                    Website</a> | <a
+                    href="https://github.com/victor-m-olsen/earth-engine/tree/main/Projects/Syria/AgriApp"
+                    target="_blank">GitHub Repository</a>
+            </p>
+        </section>
+        <section id="water-level">
+            <h3>Water Level Monitoring - Syria 2021</h3>
+            <p>
+                <strong>Role:</strong> Project Manager and Remote Sensing Specialist, 2022 <br>
+                <strong>Project:</strong> An automated analysis pipeline to estimate water levels in the Assad and
+                Tishrin reservoirs in North East Syria using satellite data. The systems provides weekly updates of
+                water levels to humanitarian organizations in Syria to better address water scarcity challenges. <br>
+                <strong>Technologies:</strong> Google Earth Engine, Linear Regression <br>
+                <strong>Key Contributions:</strong> Managed the project, supervised method development and
+                implementation <br>
+                <strong>Resources:</strong> <a
+                    href="https://github.com/victor-m-olsen/earth-engine/blob/main/Projects/Syria/water_level_estimates.ipynb"
+                    target="_blank">GitHub Repository</a>
+            </p>
+        </section>
+        <section id="surface-water">
+            <h3>Water Resource Mapping - Yemen 2021</h3>
+            <p>
+                <strong>Role:</strong> Remote Sensing Specialist <br>
+                <strong>Project:</strong> A 10m resolution monthly surface water mapping pipeline covering Yemen using a
+                supervised image classifier. The maps were provided for the University of Maryland's cholera forecasting
+                model. <br>
+                <strong>Technologies:</strong> Google Earth Engine, Machine Learning <br>
+                <strong>Key Contributions:</strong> Developed and implemented the method <br>
+                <strong>Resources:</strong> <a
+                    href="https://github.com/victor-m-olsen/earth-engine/tree/main/Projects/Yemen/Water-Classifications"
+                    target="_blank">GitHub Repository</a>
+            </p>
+        </section>
+        <section id="flood-yemen">
+            <h3>Flood Modeling - Yemen 2020</h3>
+            <p>
+                <strong>Role:</strong> Remote Sensing Specialist <br>
+                <strong>Project:</strong> A HEC-RAS flood model for Al-Hudaydah, Yemen, to estimate flood impact and
+                identify IDP sites at risk. <br>
+                <strong>Technologies:</strong> Google Earth Engine, HEC-RAS Modeling <br>
+                <strong>Key Contributions:</strong> Developed the land cover dataset for model optimization <br>
+                <strong>Resources:</strong> <a
+                    href="https://reliefweb.int/map/yemen/yemen-flood-depth-idp-sites-location-2d-hec-ras-modelling-version-1-production-date-14"
+                    target="_blank">ReliefWeb Map</a>
+            </p>
+        </section>
+        <section id="night-light">
+            <h3>Night Light Monitoring - Global 2021</h3>
+            <p>
+                <strong>Role:</strong> Remote Sensing Specialist <br>
+                <strong>Project:</strong> A web app for monitoring economic activity through satellite-observed night
+                light changes, allowing users to compare and extract time-series data. <br>
+                <strong>Technologies:</strong> Google Earth Engine, Remote Sensing <br>
+                <strong>Key Contributions:</strong> Developed the analysis pipeline and application. <br>
+                <strong>Resources:</strong> <a href="https://reachyemengis.users.earthengine.app/view/night-light"
+                    target="_blank">Web App</a>
+            </p>
+        </section>
+        <section id="ovanaaker">
+            <h3>Urban Planning with Multi-Criteria Analysis, Sweden</h3>
+            <p>
+                <strong>Role:</strong> GIS Developer <br>
+                <strong>Project:</strong> A multi-criteria analysis tool for ArcGIS to improve energy efficiency in
+                urban planning, simplifying analysis process for urban developers. <br>
+                <strong>Technologies:</strong> Python, ArcGIS, Multi-Criteria Analysis <br>
+                <strong>Key Contributions:</strong> Developed the tool. <br>
+                <strong>Resources:</strong> <a href="https://github.com/victor-m-olsen/ArcGIS-MCA-Tools"
+                    target="_blank">GitHub Repository</a>
+            </p>
+        </section>
+        <section id="leica">
+            <h3>Geospatial Surveys - Denmark 2019-2020</h3>
+            <p>
+                <strong>Role:</strong> Geospatial Surveyor <br>
+                <strong>Project:</strong> A 3D digital twin of public buildings in Brøndby Municipality, Denmark, to
+                improve facility management. The 3D representations were based on point cloud data collected through
+                Leica laser scanners. <br>
+                <strong>Technologies:</strong> Leica Geosystems Laser Scanners, GNSS/GPS. <br>
+                <strong>Key Contributions:</strong> Planned and executed data collection campaigns and operated laser
+                scanning equipment.
+            </p>
+        </section>
+        <section id="webgis-niras">
+            <h3>WebGIS for Environmental Assessments - Denmark 2019-2020</h3>
+            <p>
+                <strong>Role:</strong> WebGIS Developer <br>
+                <strong>Project:</strong> Establishing WebGIS platforms for environmental assessment projects to provide
+                data overviews and facilitate stakeholder coordination. <br>
+                <strong>Technologies:</strong> KortInfo, WebGIS, FME. <br>
+                <strong>Key Contributions:</strong> Developed and managed the WebGIS platforms.
+            </p>
+        </section>
+        <section id="greenland">
+            <h3>Orthophotos and Infrastructure Mapping, Greenland 2019-2020</h3>
+            <p>
+                <strong>Role:</strong> GIS Specialist. <br>
+                <strong>Project:</strong> Updating geospatial infrastructure data and producing orthophotos for all
+                major cities in Greenland. <br>
+                <strong>Technologies:</strong> KortInfo, WebGIS, FME. <br>
+                <strong>Key Contributions:</strong> Coordinated with suppliers and end-users, ensured quality of
+                orthophotos and vector layers.
+            </p>
+        </section>
+        <section id="malawi">
+            <h3>Humanitarian Information Management Support, Malawi 2022-2024</h3>
+            <p>
+                <strong>Role:</strong> Technical Advisor and Business Developer. <br>
+                <strong>Project:</strong> Initiate and secure funding for multiple information management initiatives in
+                Malawi, including projects for the UNRCO and the development of a spatial data infrastructure for
+                UNICEF. <br>
+                <strong>Key Contributions:</strong> Identified and addressed information management gaps at UN agencies
+                in Malawi.
+            </p>
+        </section>
+    </div>
+
+
+    <script>
+        // mapboxgl.accessToken = 'pk.eyJ1IjoibWFja2VuaGF1ZXIiLCJhIjoiY2w0aWc5eHZ5MGlkaTNqcGFlMG13enA3dyJ9.BQHjEUyBUVBd2QzzZo0OCA';
+        mapboxgl.accessToken = 'pk.eyJ1IjoibWFja2VuaGF1ZXIiLCJhIjoiY2w4c3FvODF5MDAzdTNzbnFydmlmZW5zYyJ9.mIR7xIDbvxVgUizJE_Yr8A';
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+            //style: 'mapbox://styles/mapbox/streets-v12',
+            style: 'mapbox://styles/mackenhauer/clrhsdcq600ih01pfb0jwhsit',
+            center: [35.29325, 22.10674],
+            zoom: 1.69,
+            bearing: 0,
+            pitch: 0.5
+        });
+
+        const chapters = {
+            'hsdc': {
+                bearing: 0,
+                center: [64.61161, 32.70590],
+                zoom: 5.45,
+                pitch: 50.50
+            },
+            'flood': {
+                bearing: 11.18,
+                center: [68.01785, 36.94462],
+                zoom: 11,
+                pitch: 60.12
+            },
+            'earthquake': {
+                bearing: -13.64,
+                center: [61.97379, 34.51488],
+                zoom: 7.51,
+                pitch: 50.62
+            },
+            'agriapp': {
+                bearing: 0,
+                center: [39.23859, 35.65375],
+                zoom: 5.70,
+                pitch: 36.99
+            },
+            'water-level': {
+                bearing: -55.99,
+                center: [38.41399, 35.87722],
+                zoom: 7.90,
+                pitch: 57.98
+            },
+            'surface-water': {
+                bearing: -11.20,
+                center: [44.97273, 13.87024],
+                zoom: 8.89,
+                pitch: 63.98
+            },
+            'flood-yemen': {
+                bearing: 21.59,
+                center: [43.04179, 15.04525],
+                zoom: 7.78,
+                pitch: 56.99
+            },
+            'night-light': {
+                bearing: -7.20,
+                center: [41.19340, 20.11359],
+                zoom: 3.33,
+                pitch: 29.49
+            },
+            'ovanaaker': {
+                bearing: 0,
+                center: [15.66125, 61.37500],
+                zoom: 7.42,
+                pitch: 32.32
+            },
+            'leica': {
+                bearing: -16,
+                center: [12.34544, 55.67788],
+                zoom: 9.09,
+                pitch: 51.82
+            },
+            'webgis-niras': {
+                bearing: 0,
+                center: [12.34246, 55.87186],
+                zoom: 9.40,
+                pitch: 58
+            },
+            'greenland': {
+                bearing: 15.20,
+                center: [-51.74931, 64.18138],
+                zoom: 12.3,
+                pitch: 65.94
+            },
+            'malawi': {
+                bearing: -8.80,
+                center: [33.68114, -14.06619],
+                zoom: 9.13,
+                pitch: 67
+            },
+        };
+
+        let activeChapterName = 'hsdc';
+        function setActiveChapter(chapterName) {
+            if (chapterName === activeChapterName) return;
+
+            map.flyTo(chapters[chapterName]);
+
+            document.getElementById(chapterName).classList.add('active');
+            document.getElementById(activeChapterName).classList.remove('active');
+
+            activeChapterName = chapterName;
+        }
+
+        function isElementOnScreen(id) {
+            const element = document.getElementById(id);
+            const bounds = element.getBoundingClientRect();
+            const halfwayPoint = window.innerHeight / 2;
+            return bounds.top < halfwayPoint && bounds.bottom > halfwayPoint;
+        }
+
+        // On every scroll event, check which element is on screen
+        window.onscroll = () => {
+            for (const chapterName in chapters) {
+                if (isElementOnScreen(chapterName)) {
+                    setActiveChapter(chapterName);
+                    break;
+                }
+            }
+        };
+
+
+    </script>
+
+</body>
+
+</html>
