@@ -46,6 +46,11 @@ function loadGeoJSONRoute(map) {
       map.fitBounds(routeLayer.getBounds(), {
         padding: [30, 30]
       });
+      
+      // Fix grey areas by recalculating map size after bounds change
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
     })
     .catch(error => {
       console.error('Error loading GeoJSON:', error);
