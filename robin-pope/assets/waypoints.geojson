@@ -1,0 +1,15 @@
+{
+"type": "FeatureCollection",
+"name": "waypoints_dir",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "directions": "From Crossroads Hotel, Lilongwe, head out of Lilongwe towards Zambia via the Mchinji roundabout.", "label": "Crossroads" }, "geometry": { "type": "Point", "coordinates": [ 33.75689503597728, -13.973936329139262 ] } },
+{ "type": "Feature", "properties": { "id": 2, "directions": "Complete customs and immigration. Follow the surfaced road for approximately 20 km to Chipata.", "label": "Border" }, "geometry": { "type": "Point", "coordinates": [ 32.796253738510245, -13.751520014582141 ] } },
+{ "type": "Feature", "properties": { "id": 3, "directions": "Continue on the main road through town. After the Total Service Station on your left, take the next turn on your right (the Mfuwe Road is not signposted). If unsure, ask and confirm with a pedestrian. This is a tarred road that leads to Mfuwe. Follow this road for 110 km.", "label": "Mfuwe Road" }, "geometry": { "type": "Point", "coordinates": [ 32.625789642333984, -13.630922317504883 ] } },
+{ "type": "Feature", "properties": { "id": 4, "directions": "At the end of the tarred road you join the road between Mfuwe and the Airport. Turn right at the T-junction and follow the road to Oasis Filling Station in Mfuwe town or village (about 30 minutes).", "label": "T-junktion" }, "geometry": { "type": "Point", "coordinates": [ 31.918445587158203, -13.206052780151367 ] } },
+{ "type": "Feature", "properties": { "id": 5, "directions": "From the Oasis fuel station take the next left and continue along this tar road for approximately five minutes until you see a left turn into a dirt track with signposts to various camps including Nkwali.", "label": "Dirt track" }, "geometry": { "type": "Point", "coordinates": [ 31.79472541809082, -13.10980224609375 ] } },
+{ "type": "Feature", "properties": { "id": 6, "directions": "Take this dirt road and continue for 5–10 minutes until you pass a large baobab tree on the left. Shortly after, a road veers off to the right with a signpost to Nkwali Camp. Take this right turn.", "label": "Nkwali camp turn" }, "geometry": { "type": "Point", "coordinates": [ 31.762019034801362, -13.136216630653978 ] } },
+{ "type": "Feature", "properties": { "id": 7, "directions": "Soon after the turn, the dirt track splits into a Y. Keep right.", "label": "Y-split" }, "geometry": { "type": "Point", "coordinates": [ 31.759496688842773, -13.136577606201172 ] } },
+{ "type": "Feature", "properties": { "id": 8, "directions": "Continue for a further 10–15 minutes. You will cross three bridges; the third bridge is the largest. After crossing it, you are very close. Depending on which property you are going to, follow the relevant sign until you reach your destination.", "label": "Robin's House" }, "geometry": { "type": "Point", "coordinates": [ 31.741062714049672, -13.116282145433477 ] } }
+]
+}

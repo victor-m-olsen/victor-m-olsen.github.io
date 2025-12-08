@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Route Guide - Lilongwe to South Luangwa | Robin Pope Safaris</title>
+
+    <meta property="og:title" content="Robin Pope Safaris - Route Guide" />
+    <meta
+      property="og:description"
+      content="Interactive route guide and directions from Lilongwe to South Luangwa National Park."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/hero.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Robin Pope Safaris - Route Guide" />
+    <meta
+      name="twitter:description"
+      content="Interactive route guide and directions from Lilongwe to South Luangwa National Park."
+    />
+    <meta name="twitter:image" content="assets/hero.png" />
+    <meta name="twitter:site" content="@replit" />
+
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+
+    <!-- Google Fonts - Similar to RPs's Soleil font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <header class="hero">
+      <div
+        class="hero-bg"
+        style="background-image: url(&quot;assets/hero.png&quot;)"
+      ></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-subtitle">The Journey Begins</p>
+        <h1 class="hero-title">Robin’s House</h1>
+        <p class="hero-quote">South Luangwa National Park</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+      <div class="grid">
+        <!-- Left Column -->
+        <div class="sidebar">
+          <!-- Trip Overview Card -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.3 1 12.1 1 13v3c0 .6.4 1 1 1h2"
+                  ></path>
+                  <circle cx="7" cy="17" r="2"></circle>
+                  <circle cx="17" cy="17" r="2"></circle>
+                </svg>
+                Trip Overview
+              </h2>
+              <p class="card-description">Essential details for your drive</p>
+            </div>
+            <div class="card-content">
+              <div class="stats-grid">
+                <div class="stat-box">
+                  <p class="stat-label">Time</p>
+                  <p class="stat-value" data-testid="text-time-value">
+                    4 - 4.5 Hours
+                  </p>
+                </div>
+                <div class="stat-box">
+                  <p class="stat-label">Distance</p>
+                  <p class="stat-value" data-testid="text-distance-value">
+                    ~280 km
+                  </p>
+                </div>
+              </div>
+
+              <button
+                class="btn btn-primary"
+                id="downloadBtn"
+                data-testid="button-download-gpx"
+              >
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download GPX Route
+              </button>
+
+              <button
+                class="btn btn-primary"
+                id="downloadPdfBtn"
+                data-testid="button-download-pdf"
+              >
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Download PDF Directions
+              </button>
+            </div>
+          </div>
+
+          <!-- Border Requirements Card -->
+          <div class="card card-accent">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg
+                  class="icon icon-accent"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <path d="M9 12l2 2 4-4"></path>
+                </svg>
+                Border Requirements
+              </h2>
+            </div>
+            <div class="card-content collapsibles">
+              <!-- Malawi Border -->
+              <div class="collapsible">
+                <button
+                  class="collapsible-trigger"
+                  data-target="malawi-content"
+                  data-testid="button-toggle-malawi"
+                >
+                  <span>Malawi Border (Exit)</span>
+                  <svg
+                    class="chevron"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+                <div
+                  class="collapsible-content"
+                  id="malawi-content"
+                  data-testid="content-malawi-border"
+                >
+                  <ul>
+                    <li>
+                      Driver must complete TEP (Temporary Export Permit) –
+                      MK10,000.
+                    </li>
+                    <li>Present blue book (vehicle registration).</li>
+                    <li>
+                      If not owner: provide letter of consent (driver's name,
+                      passport no., car reg.).
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Zambia Border -->
+              <div class="collapsible">
+                <button
+                  class="collapsible-trigger"
+                  data-target="zambia-content"
+                  data-testid="button-toggle-zambia"
+                >
+                  <span>Zambia Border (Entry)</span>
+                  <svg
+                    class="chevron"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+                <div
+                  class="collapsible-content"
+                  id="zambia-content"
+                  data-testid="content-zambia-border"
+                >
+                  <ul>
+                    <li>
+                      Visa-exempt countries: UK, USA, EU, Canada, Norway,
+                      Australia, China, Japan, South Korea, Gulf States.
+                    </li>
+                    <li>
+                      Visas available at border but recommended in advance.
+                    </li>
+                    <li>Driver must complete TIP (Temporary Import Permit).</li>
+                    <li>Third-party insurance (~$40) required.</li>
+                    <li>Carbon emission tax: 150 Kwacha (~$25).</li>
+                    <li>Chipata Municipal Council fee: 40 Kwacha (~$5).</li>
+                    <li>
+                      Interpol Clearance from police required for vehicle.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Turn-by-Turn Guide -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Turn-by-Turn Guide</h2>
+              <p class="card-description">
+                Click markers on the map to jump to directions
+              </p>
+            </div>
+            <div class="card-content">
+              <div class="timeline-scroll" id="timeline-scroll">
+                <div class="timeline" id="timeline">
+                  <!-- Waypoints will be dynamically loaded from GeoJSON -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Map -->
+        <div class="map-column">
+          <div class="map-wrapper">
+            <div id="map" data-testid="map-route"></div>
+          </div>
+
+          <!-- Contact Card -->
+          <div class="card card-contact">
+            <div class="contact-grid">
+              <div class="contact-info">
+                <h3>RP Safaris</h3>
+                <p>
+                  For any assistance during your journey, please do not hesitate
+                  to contact our team.
+                </p>
+              </div>
+              <div class="contact-links">
+                <a
+                  href="tel:+260957090441"
+                  class="contact-link contact-phone"
+                  data-testid="link-phone"
+                >
+                  <svg
+                    class="icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                    ></path>
+                  </svg>
+                  <span>+260 (0) 95 709 0441</span>
+                </a>
+                <a
+                  href="mailto:info@robinpopesafaris.net"
+                  class="contact-link"
+                  data-testid="link-email"
+                >
+                  <svg
+                    class="icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                    ></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                  <span>info@robinpopesafaris.net</span>
+                </a>
+                <a
+                  href="https://www.robinpopesafaris.net"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="contact-link"
+                  data-testid="link-website"
+                >
+                  <svg
+                    class="icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path
+                      d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                    ></path>
+                  </svg>
+                  <span>www.robinpopesafaris.net</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; <span id="year"></span> Prototype product for Robin Pope Safari - All rights reserved - JV Consulting.
+      </p>
+      <p class="footer-small">Map data &copy; OpenStreetMap contributors</p>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="main.js"></script>
+  </body>
+</html>
