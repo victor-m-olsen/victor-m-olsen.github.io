@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Mobile Walking Safari | Robin Pope Safaris</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="icon" type="image/x-icon"
+        href="https://raw.githubusercontent.com/mapbox/assembly/publisher-staging/src/svgs/mapbox.svg">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdn.jsdelivr.net/npm/mapbox-gl-globe-minimap@1.2.0/dist/bundle.js"></script>
+    <script src="https://unpkg.com/scrollama"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        a,
+        a:hover,
+        a:visited {
+            color: #0071bc;
+        }
+
+        #map {
+            top: 0;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+
+        #header {
+            margin: auto;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+
+        #header h1,
+        #header h2,
+        #header p {
+            margin: 0;
+            padding: 2vh 2vw;
+            text-align: center;
+        }
+
+        #footer {
+            width: 100%;
+            min-height: 5vh;
+            padding-top: 2vh;
+            padding-bottom: 2vh;
+            text-align: center;
+            line-height: 25px;
+            font-size: 13px;
+            position: relative;
+            z-index: 5;
+        }
+
+        #features {
+            padding-top: 10vh;
+            padding-bottom: 10vh;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        .centered {
+            width: 50vw;
+            margin: 0 auto;
+        }
+
+        .lefty {
+            width: 33vw;
+            margin-left: 5vw;
+        }
+
+        .righty {
+            width: 33vw;
+            margin-left: 62vw;
+        }
+
+        .fully {
+            width: 100%;
+            margin: auto;
+        }
+
+        .light {
+            color: #444;
+            background-color: #fafafa;
+        }
+
+        .dark {
+            color: #fafafa;
+            background-color: #444;
+        }
+
+        .safari {
+            color: #2c2c2c;
+            background-color: rgba(255, 250, 240, 0.88);
+            font-family: 'Georgia', serif;
+            border-left: 4px solid #e07020;
+        }
+
+        .safari h1, .safari h2, .safari h3 {
+            color: #c44d00;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+        }
+
+        .safari a {
+            color: #e07020;
+        }
+
+        .step {
+            padding-bottom: 50vh;
+            opacity: 0.25;
+        }
+
+        .step.active {
+            opacity: 0.9;
+        }
+
+        .step div {
+            padding: 25px 50px;
+            line-height: 25px;
+            font-size: 13px;
+        }
+
+        .step img {
+            width: 100%;
+        }
+
+        .journey-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #e07020, #ff8c42);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            margin-bottom: 8px;
+        }
+
+        #footer-cta {
+            background: linear-gradient(180deg, rgba(255, 250, 240, 0.98) 0%, rgba(224, 112, 32, 0.15) 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            border-top: 3px solid #e07020;
+        }
+
+        #footer-cta h2 {
+            font-family: 'Georgia', serif;
+            color: #c44d00;
+            font-size: 32px;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(255,255,255,0.5);
+        }
+
+        #footer-cta p {
+            font-family: 'Georgia', serif;
+            color: #2c2c2c;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        #footer-cta .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #e07020, #ff8c42);
+            color: #fff;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            font-family: 'Georgia', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 6px 20px rgba(224, 112, 32, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        #footer-cta .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(224, 112, 32, 0.5);
+            background: linear-gradient(135deg, #ff8c42, #ffab5c);
+        }
+
+        #footer-cta .safari-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        #footer-cta .stat-item {
+            text-align: center;
+        }
+
+        #footer-cta .stat-number {
+            font-family: 'Georgia', serif;
+            color: #e07020;
+            font-size: 36px;
+            font-weight: bold;
+            display: block;
+        }
+
+        #footer-cta .stat-label {
+            font-family: 'Georgia', serif;
+            color: #c44d00;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #footer-cta .footer-note {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #e07020;
+            font-style: italic;
+        }
+
+        @media (max-width: 750px) {
+            .centered,
+            .lefty,
+            .righty,
+            .fully {
+                width: 90vw;
+                margin: 0 auto;
+            }
+            
+            #footer-cta h2 {
+                font-size: 24px;
+            }
+            
+            #footer-cta .safari-stats {
+                gap: 25px;
+            }
+            
+            #footer-cta .stat-number {
+                font-size: 28px;
+            }
+        }
+
+        .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan,
+        .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan .mapboxgl-canvas {
+            touch-action: unset;
+        }
+
+        .wildlife-marker {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .wildlife-marker:hover {
+            transform: scale(1.15);
+            z-index: 10;
+        }
+
+        .wildlife-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e07020;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .wildlife-label {
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,250,240,0.95);
+            color: #c44d00;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+            font-family: 'Georgia', serif;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .wildlife-marker:hover .wildlife-label {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+    <div id="story"></div>
+
+    <script src="./route-data.js"></script>
+    <script src="./config.js"></script>
+    <script>
+        if (typeof MAPBOX_TOKEN_OVERRIDE !== 'undefined' && MAPBOX_TOKEN_OVERRIDE !== 'REPLIT_TOKEN_PLACEHOLDER') {
+            config.accessToken = MAPBOX_TOKEN_OVERRIDE;
+        }
+    </script>
+    <script src="./config.local.js" onerror=""></script>
+    <script>
+        if (typeof MAPBOX_TOKEN_OVERRIDE !== 'undefined' && MAPBOX_TOKEN_OVERRIDE !== 'REPLIT_TOKEN_PLACEHOLDER') {
+            config.accessToken = MAPBOX_TOKEN_OVERRIDE;
+        }
+        var initLoad = true;
+        var routeData = null;
+        var allRouteCoords = [];
+        var currentChapterIndex = 0;
+        var rotateAnimationFrame = null;
+        
+        var chapterRouteProgress = {
+            'intro-zambia': 0,
+            'day-1-nkwali': 0.05,
+            'day-2-mupamadzi': 0.25,
+            'day-3-mobile': 0.40,
+            'day-4-explore': 0.55,
+            'day-5-6-river': 0.75,
+            'day-7-tenatena': 0.95,
+            'journey-complete': 1.0
+        };
+        
+        var layerTypes = {
+            'fill': ['fill-opacity'],
+            'line': ['line-opacity'],
+            'circle': ['circle-opacity', 'circle-stroke-opacity'],
+            'symbol': ['icon-opacity', 'text-opacity'],
+            'raster': ['raster-opacity'],
+            'fill-extrusion': ['fill-extrusion-opacity'],
+            'heatmap': ['heatmap-opacity']
+        }
+
+        var alignments = {
+            'left': 'lefty',
+            'center': 'centered',
+            'right': 'righty',
+            'full': 'fully'
+        }
+
+        function getLayerPaintType(layer) {
+            var layerType = map.getLayer(layer).type;
+            return layerTypes[layerType];
+        }
+
+        function setLayerOpacity(layer) {
+            var paintProps = getLayerPaintType(layer.layer);
+            paintProps.forEach(function (prop) {
+                var options = {};
+                if (layer.duration) {
+                    var transitionProp = prop + "-transition";
+                    options = { "duration": layer.duration };
+                    map.setPaintProperty(layer.layer, transitionProp, options);
+                }
+                map.setPaintProperty(layer.layer, prop, layer.opacity, options);
+            });
+        }
+        
+        function extractAllCoordinates(geojson) {
+            var coords = [];
+            geojson.features.forEach(function(feature) {
+                if (feature.geometry.type === 'MultiLineString') {
+                    feature.geometry.coordinates.forEach(function(line) {
+                        coords = coords.concat(line);
+                    });
+                } else if (feature.geometry.type === 'LineString') {
+                    coords = coords.concat(feature.geometry.coordinates);
+                }
+            });
+            return coords;
+        }
+        
+        function updateRouteProgress(chapterId) {
+            if (!routeData || allRouteCoords.length === 0) return;
+            
+            var progress = chapterRouteProgress[chapterId] || 0;
+            var numPoints = Math.floor(allRouteCoords.length * progress);
+            
+            if (numPoints < 2) {
+                numPoints = progress > 0 ? 2 : 0;
+            }
+            
+            var visibleCoords = allRouteCoords.slice(0, numPoints);
+            
+            if (map.getSource('safari-route-animated')) {
+                if (visibleCoords.length >= 2) {
+                    map.getSource('safari-route-animated').setData({
+                        type: 'Feature',
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: visibleCoords
+                        }
+                    });
+                    if (map.getSource('trail-head')) {
+                        map.getSource('trail-head').setData({
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: visibleCoords[visibleCoords.length - 1]
+                            }
+                        });
+                    }
+                } else {
+                    map.getSource('safari-route-animated').setData({
+                        type: 'Feature',
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: []
+                        }
+                    });
+                    if (map.getSource('trail-head')) {
+                        map.getSource('trail-head').setData({
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: []
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        var story = document.getElementById('story');
+        var features = document.createElement('div');
+        features.setAttribute('id', 'features');
+
+        var header = document.createElement('div');
+
+        if (config.title) {
+            var titleText = document.createElement('h1');
+            titleText.innerText = config.title;
+            header.appendChild(titleText);
+        }
+
+        if (config.subtitle) {
+            var subtitleText = document.createElement('h2');
+            subtitleText.innerText = config.subtitle;
+            header.appendChild(subtitleText);
+        }
+
+        if (config.byline) {
+            var bylineText = document.createElement('p');
+            bylineText.innerText = config.byline;
+            header.appendChild(bylineText);
+        }
+
+        if (header.innerText.length > 0) {
+            header.classList.add(config.theme);
+            header.setAttribute('id', 'header');
+            story.appendChild(header);
+        }
+
+        config.chapters.forEach((record, idx) => {
+            var container = document.createElement('div');
+            var chapter = document.createElement('div');
+
+            if (record.title) {
+                var title = document.createElement('h3');
+                title.innerText = record.title;
+                chapter.appendChild(title);
+            }
+
+            if (record.image) {
+                var image = new Image();
+                image.src = record.image;
+                chapter.appendChild(image);
+            }
+
+            if (record.description) {
+                var storyP = document.createElement('p');
+                storyP.innerHTML = record.description;
+                chapter.appendChild(storyP);
+            }
+
+            container.setAttribute('id', record.id);
+            container.classList.add('step');
+            if (idx === 0) {
+                container.classList.add('active');
+            }
+
+            chapter.classList.add(config.theme);
+            container.appendChild(chapter);
+            container.classList.add(alignments[record.alignment] || 'centered');
+            if (record.hidden) {
+                container.classList.add('hidden');
+            }
+            features.appendChild(container);
+        });
+
+        story.appendChild(features);
+
+        var footerCta = document.createElement('div');
+        footerCta.setAttribute('id', 'footer-cta');
+        footerCta.innerHTML = `
+            <h2>Begin Your Safari Adventure</h2>
+            <p>Experience the magic of walking through Africa's finest wildlife sanctuary. 
+               Let Robin Pope Safaris guide you on a journey of discovery through South Luangwa's pristine wilderness.</p>
+            <a href="https://www.robinpopesafaris.net" target="_blank" class="cta-button">Book Your Adventure</a>
+            <div class="safari-stats">
+                <div class="stat-item">
+                    <span class="stat-number">7</span>
+                    <span class="stat-label">Days</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">200+</span>
+                    <span class="stat-label">Kilometers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Unique Camps</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Memories</span>
+                </div>
+            </div>
+            <p class="footer-note">Robin Pope Safaris — Pioneering walking safaris since 1986</p>
+        `;
+        story.appendChild(footerCta);
+
+        mapboxgl.accessToken = config.accessToken;
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: config.style,
+            center: config.chapters[0].location.center,
+            zoom: config.chapters[0].location.zoom,
+            bearing: config.chapters[0].location.bearing,
+            pitch: config.chapters[0].location.pitch,
+            interactive: false,
+            projection: config.projection
+        });
+
+        if (config.inset) {
+            map.addControl(
+                new GlobeMinimap({ ...config.insetOptions }),
+                config.insetPosition
+            );
+        }
+
+        if (config.showMarkers) {
+            var marker = new mapboxgl.Marker({ color: config.markerColor });
+            marker.setLngLat(config.chapters[0].location.center).addTo(map);
+        }
+
+        var scroller = scrollama();
+
+        map.on('style.load', () => {
+            if (config.use3dTerrain) {
+                map.addSource('mapbox-dem', {
+                    type: 'raster-dem',
+                    url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                    tileSize: 512,
+                    maxzoom: 14
+                });
+                map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+            }
+            
+            if (typeof safariRouteData !== 'undefined') {
+                    routeData = safariRouteData;
+                    allRouteCoords = extractAllCoordinates(safariRouteData);
+                    
+                    map.addSource('safari-route-bg', {
+                        type: 'geojson',
+                        data: safariRouteData
+                    });
+                    
+                    map.addLayer({
+                        id: 'safari-route-bg-line',
+                        type: 'line',
+                        source: 'safari-route-bg',
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': 'rgba(224, 112, 32, 0.2)',
+                            'line-width': 2,
+                            'line-dasharray': [1, 4]
+                        }
+                    });
+                    
+                    map.addSource('safari-route-animated', {
+                        type: 'geojson',
+                        data: {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'LineString',
+                                coordinates: []
+                            }
+                        }
+                    });
+                    
+                    map.addLayer({
+                        id: 'safari-route-glow',
+                        type: 'line',
+                        source: 'safari-route-animated',
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': 'rgba(224, 112, 32, 0.35)',
+                            'line-width': 10,
+                            'line-blur': 4
+                        }
+                    });
+                    
+                    map.addLayer({
+                        id: 'safari-route-line',
+                        type: 'line',
+                        source: 'safari-route-animated',
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': '#e07020',
+                            'line-width': 4,
+                            'line-dasharray': [2, 3],
+                            'line-opacity': 1
+                        }
+                    });
+                    
+                    map.addSource('trail-head', {
+                        type: 'geojson',
+                        data: {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: []
+                            }
+                        }
+                    });
+                    
+                    map.addLayer({
+                        id: 'trail-head-glow',
+                        type: 'circle',
+                        source: 'trail-head',
+                        paint: {
+                            'circle-radius': 12,
+                            'circle-color': '#ff8c42',
+                            'circle-blur': 0.8,
+                            'circle-opacity': 0.6
+                        }
+                    });
+                    
+                    map.addLayer({
+                        id: 'trail-head-dot',
+                        type: 'circle',
+                        source: 'trail-head',
+                        paint: {
+                            'circle-radius': 6,
+                            'circle-color': '#e07020',
+                            'circle-stroke-width': 2,
+                            'circle-stroke-color': '#fff'
+                        }
+                    });
+                    
+                    updateRouteProgress(config.chapters[0].id);
+                    
+                    var wildlifeSpots = [
+                        { coords: [31.72, -13.11], image: './assets/wildlife-lion.jpg', name: 'Lion Pride' },
+                        { coords: [31.55, -12.75], image: './assets/wildlife-elephant.jpg', name: 'Elephant Herd' },
+                        { coords: [31.48, -12.62], image: './assets/wildlife-leopard.jpg', name: 'Leopard' },
+                        { coords: [31.60, -12.55], image: './assets/wildlife-hippo.jpg', name: 'Hippo Pool' },
+                        { coords: [31.74, -12.52], image: './assets/wildlife-zebra.jpg', name: 'Zebra' },
+                        { coords: [31.85, -12.98], image: './assets/wildlife-giraffe.jpg', name: 'Giraffe' }
+                    ];
+                    
+                    wildlifeSpots.forEach(function(spot) {
+                        var el = document.createElement('div');
+                        el.className = 'wildlife-marker';
+                        el.innerHTML = `
+                            <img src="${spot.image}" class="wildlife-photo" alt="${spot.name}">
+                            <span class="wildlife-label">${spot.name}</span>
+                        `;
+                        
+                        new mapboxgl.Marker({ element: el, anchor: 'center' })
+                            .setLngLat(spot.coords)
+                            .addTo(map);
+                    });
+            }
+        });
+
+        map.on("load", function () {
+            scroller
+                .setup({
+                    step: '.step',
+                    offset: 0.5,
+                    progress: true
+                })
+                .onStepEnter(async response => {
+                    var current_chapter = config.chapters.findIndex(chap => chap.id === response.element.id);
+                    var chapter = config.chapters[current_chapter];
+                    currentChapterIndex = current_chapter;
+
+                    response.element.classList.add('active');
+                    
+                    if (rotateAnimationFrame) {
+                        cancelAnimationFrame(rotateAnimationFrame);
+                        rotateAnimationFrame = null;
+                    }
+                    
+                    var flyOptions = {
+                        ...chapter.location,
+                        speed: 0.6,
+                        curve: 1.8,
+                        essential: true
+                    };
+                    map[chapter.mapAnimation || 'flyTo'](flyOptions);
+
+                    if (config.showMarkers) {
+                        marker.setLngLat(chapter.location.center);
+                    }
+                    if (chapter.onChapterEnter.length > 0) {
+                        chapter.onChapterEnter.forEach(setLayerOpacity);
+                    }
+                    if (chapter.callback) {
+                        window[chapter.callback]();
+                    }
+                    
+                    updateRouteProgress(chapter.id);
+                    
+                    if (chapter.rotateAnimation) {
+                        map.once('moveend', () => {
+                            if (currentChapterIndex === current_chapter) {
+                                const startBearing = map.getBearing();
+                                const duration = 45000;
+                                const startTime = performance.now();
+                                
+                                function animateRotation(currentTime) {
+                                    if (currentChapterIndex !== current_chapter) return;
+                                    
+                                    const elapsed = currentTime - startTime;
+                                    const progress = (elapsed % duration) / duration;
+                                    const newBearing = startBearing + (progress * 120);
+                                    
+                                    map.setBearing(newBearing);
+                                    rotateAnimationFrame = requestAnimationFrame(animateRotation);
+                                }
+                                
+                                rotateAnimationFrame = requestAnimationFrame(animateRotation);
+                            }
+                        });
+                    }
+                    
+                    if (config.auto) {
+                        var next_chapter = (current_chapter + 1) % config.chapters.length;
+                        map.once('moveend', () => {
+                            document.querySelectorAll('[data-scrollama-index="' + next_chapter.toString() + '"]')[0].scrollIntoView();
+                        });
+                    }
+                })
+                .onStepExit(response => {
+                    var chapter = config.chapters.find(chap => chap.id === response.element.id);
+                    response.element.classList.remove('active');
+                    if (chapter.onChapterExit.length > 0) {
+                        chapter.onChapterExit.forEach(setLayerOpacity);
+                    }
+                })
+                .onStepProgress(response => {
+                    var chapter = config.chapters.find(chap => chap.id === response.element.id);
+                    if (chapter) {
+                        var chapterIndex = config.chapters.findIndex(chap => chap.id === chapter.id);
+                        var nextChapter = config.chapters[chapterIndex + 1];
+                        
+                        if (nextChapter && routeData) {
+                            var currentProgress = chapterRouteProgress[chapter.id] || 0;
+                            var nextProgress = chapterRouteProgress[nextChapter.id] || currentProgress;
+                            var interpolatedProgress = currentProgress + (response.progress * (nextProgress - currentProgress));
+                            
+                            var numPoints = Math.floor(allRouteCoords.length * interpolatedProgress);
+                            if (numPoints >= 2 && map.getSource('safari-route-animated')) {
+                                var visibleCoords = allRouteCoords.slice(0, numPoints);
+                                map.getSource('safari-route-animated').setData({
+                                    type: 'Feature',
+                                    geometry: {
+                                        type: 'LineString',
+                                        coordinates: visibleCoords
+                                    }
+                                });
+                                if (map.getSource('trail-head')) {
+                                    map.getSource('trail-head').setData({
+                                        type: 'Feature',
+                                        geometry: {
+                                            type: 'Point',
+                                            coordinates: visibleCoords[visibleCoords.length - 1]
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
+
+            if (config.auto) {
+                document.querySelectorAll('[data-scrollama-index="0"]')[0].scrollIntoView();
+            }
+        });    
+
+    </script>
+
+</body>
+
+</html>
