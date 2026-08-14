@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Oman Oil Spill Viewer - Victor Olsen</title>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .map-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-N1CS1CL09K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-N1CS1CL09K');
+  </script>
+</head>
+
+<body>
+  <main class="map-container">
+    <iframe
+      src="https://earth-engine-cloud-project-123.projects.earthengine.app/view/oil-spill-oman"
+      title="Oman Oil Spill Sentinel-2 Image Viewer"
+      allow="fullscreen"
+      allowfullscreen>
+    </iframe>
+  </main>
+</body>
+</html>
